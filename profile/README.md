@@ -1,4 +1,4 @@
-# 量潮科技官方Github Organization
+# 量潮开源
 
 量潮科技以GitHub Organization为主要开源平台来推动公司的开源战略。
 
