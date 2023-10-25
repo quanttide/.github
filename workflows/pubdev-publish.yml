@@ -1,0 +1,11 @@
+name: pubdev-publish
+on:
+  # https://docs.github.com/cn/actions/using-workflows/events-that-trigger-workflows#release
+  release:
+    types: [published]
+jobs:
+  # https://dart.dev/tools/pub/automated-publishing#configuring-a-github-action-workflow-for-publishing-to-pubdev
+  publish:
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+    # with:
+    #   working-directory: path/to/package/within/repository
