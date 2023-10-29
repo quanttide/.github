@@ -31,8 +31,8 @@
 ### 云服务
 
 量潮数据云：
-- [`qtcloud-data-client-flutter`](https://github.com/quanttide/qtcloud-data-client-flutter): 量潮数据云Flutter客户端
-- [`qtcloud-data-server-fastapi`](https://github.com/quanttide/qtcloud-data-server-fastapi): 量潮数据云FastAPI服务端
+- [`qtcloud-data-provider-fastapi`](https://github.com/quanttide/qtcloud-data-provider-fastapi): 量潮数据云FastAPI服务端
+- [`qtcloud-data-console-flutter`](https://github.com/quanttide/qtcloud-data-console-flutter): 量潮数据云Flutter客户端
 
 ### 社区合作
 
