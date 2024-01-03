@@ -4,8 +4,15 @@ on:
   release:
     types: [published]
 jobs:
-  # https://dart.dev/tools/pub/automated-publishing#configuring-a-github-action-workflow-for-publishing-to-pubdev
-  publish:
-    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
-    # with:
-    #   working-directory: path/to/package/within/repository
+  publishing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'checkout'
+        uses: actions/checkout@v2   # required!
+      - name: 'publish to pub.dev'
+        uses: k-paxian/dart-package-publisher@master
+        with:
+          credentialJson: ${{ secrets.PUBDEV_CREDENTIAL_JSON }}
+          # skipTests: true  # 临时
+          force: true
+          flutter: true
