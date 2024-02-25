@@ -1,0 +1,42 @@
+name: flutter-web-deployment
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+env:
+  # `.` for applications, and `./example` for packages and plugins
+  PUBLISHING_DIRECTORY: ./example
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.PUBLISHING_DIRECTORY }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build web
+        run: |
+          echo "Current working directory: $(pwd)"
+          echo "Web application directory: $(pwd)/build/web"
+          flutter build web --base-href="/${{ github.event.repository.name }}/"
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Note: relative to `github.workspace` context but not working directory
+          publish_dir: ${{ env.PUBLISHING_DIRECTORY }}/build/web
