@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [ xiezipeng ]
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1.7.0
+        with:
+          audience: sts.amazonaws.com.cn
+          role-to-assume: arn:aws-cn:iam::078694071743:role/GithubActions-S3-cn #change to reflect your IAM role’s ARN
+          aws-region: cn-northwest-1
+
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Build React App
+        run: npm install && npm run build
+
+      - name: Sts GetCallerIdentity
+        run: |
+          aws sts get-caller-identity
+
+      - name: Deploy to S3 Bucket
+        run: |
+          aws s3 sync dist/ s3://university-rank.demo.quanttide.com
