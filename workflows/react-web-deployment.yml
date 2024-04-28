@@ -2,7 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ xiezipeng ]
+    branches:
+      - main
+      - master
 permissions:
   id-token: write
   contents: read
