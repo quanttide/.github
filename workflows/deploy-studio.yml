@@ -1,0 +1,65 @@
+name: Deploy Studio to OSS
+
+on:
+  workflow_call:
+    inputs:
+      studio_dir:
+        required: true
+        type: string
+        description: 'Flutter 项目目录，如 src/studio/'
+      oss_bucket:
+        required: true
+        type: string
+        description: 'OSS 桶名，如 qtdata-studio'
+      cdn_domains:
+        required: true
+        type: string
+        description: 'CDN 域名列表，JSON 数组'
+      flutter_version:
+        required: false
+        type: string
+        default: '3.44.8'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ inputs.flutter_version }}
+
+      - name: Build Flutter Web
+        run: |
+          cd ${{ inputs.studio_dir }}
+          flutter pub get
+          flutter build web
+
+      - uses: manyuanrong/setup-ossutil@v3
+        with:
+          endpoint: oss-cn-hangzhou.aliyuncs.com
+          access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+          access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+
+      - name: Upload to OSS
+        run: ossutil cp ${{ inputs.studio_dir }}/build/web/ oss://${{ inputs.oss_bucket }}/ -r -f --meta=Cache-Control:public,max-age=31536000
+
+      - name: Refresh CDN
+        run: |
+          pip install aliyun-python-sdk-cdn
+          python -c "
+          import json, os
+          from aliyunsdkcore.client import AcsClient
+          from aliyunsdkcdn.request.v20180510.RefreshObjectCachesRequest import RefreshObjectCachesRequest
+          cli = AcsClient(os.environ['ALIYUN_ACCESS_KEY_ID'], os.environ['ALIYUN_ACCESS_KEY_SECRET'], 'cn-hangzhou')
+          domains = json.loads('\${{ inputs.cdn_domains }}')
+          for domain in domains:
+              req = RefreshObjectCachesRequest()
+              req.set_ObjectPath(domain)
+              req.set_ObjectType('Directory')
+              cli.do_action_with_exception(req)
+          "
+        env:
+          ALIYUN_ACCESS_KEY_ID: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+          ALIYUN_ACCESS_KEY_SECRET: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
