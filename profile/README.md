@@ -44,10 +44,6 @@
 
 - 量潮商务中心 - https://business.quanttide.com/
 
-### 量潮产品中心
-
-- 量潮产品中心 - https://product.quanttide.com/
-
 ### 量潮媒体中心
 
 - 量潮媒体中心 - https://media.quanttide.com/
