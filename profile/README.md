@@ -40,9 +40,13 @@
 - 量潮健康 - https://health.quanttide.com/
 - 量潮健康工作台 - https://studio.health.quanttide.com/
 
-### 量潮商务
+### 量潮商务中心
 
-- 量潮商务：https://business.quanttide.com/
+- 量潮商务中心 - https://business.quanttide.com/
+
+### 量潮产品中心
+
+- 量潮产品中心 - https://product.quanttide.com/
 
 ### 量潮媒体中心
 
